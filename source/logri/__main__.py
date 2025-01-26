@@ -2,6 +2,7 @@ import sys
 
 from . import management
 
+
 def main():
     args = management.get_arguments(sys.argv)
     if args is None:
@@ -13,6 +14,7 @@ def main():
         exit()
 
     management.execute_task(task)
+
 
 if __name__ == "__main__":
     main()

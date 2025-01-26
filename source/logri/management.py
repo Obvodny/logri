@@ -3,13 +3,12 @@ import codecs
 import dataclasses
 import enum
 import os
-import textwrap
 
 prog = 'logri'
 
 input_text = argparse.ArgumentParser(add_help=False)
-input_text.add_argument('--vf', '--verilog-file',
-    action='extend', nargs='+', default=[],
+input_text.add_argument(
+    '--vf', '--verilog-file', action='extend', nargs='+', default=[],
     metavar='VERILOG_FILE', dest='verilog_file')
 input_text.add_argument('-e', '--encoding', default='utf-8')
 
@@ -17,8 +16,10 @@ output_bin = argparse.ArgumentParser(add_help=False)
 output_bin.add_argument('-o', '--output', default='logri_out.bin')
 
 input_bin = argparse.ArgumentParser(add_help=False)
-input_bin.add_argument('--bf', '--binary-file', 
+input_bin.add_argument(
+    '--bf', '--binary-file',
     nargs=1, metavar='BINARY_FILE', dest='binary_file')
+
 
 @dataclasses.dataclass
 class CommandEntry:
@@ -34,6 +35,7 @@ class CommandEntry:
                 prog=f'{prog} {self.name}',
                 parents=self.parents)
         return self._parser
+
 
 compile_entry = CommandEntry(
     'compile', 'Compile verilog to python object', [input_text, output_bin])
@@ -58,7 +60,7 @@ def print_general_help():
 
 def print_command_help(argv: list[str]) -> None:
     command = argv[0]
-    if command in command_dict: 
+    if command in command_dict:
         command_dict[command].parser.print_help()
     elif command == 'help':
         print_general_help()
@@ -113,7 +115,7 @@ class TaskDescription():
 
     def __getattr__(self, name):
         raise AttributeError(f'Task with action {self.action} '
-            'do not have attribute {name}.')
+                             'do not have attribute {name}.')
 
     def set_output(self, output: str) -> None:
         match self.action:
@@ -150,8 +152,8 @@ class TaskDescription():
                 if os.access(file, os.W_OK):
                     return
                 else:
-                    raise PermissionError('Have no permission to '
-                        f'write file {repr(file)}.')
+                    raise PermissionError(f'Have no permission to '
+                                          f'write file {repr(file)}.')
             else:
                 raise IsADirectoryError(f'{repr(file)} is not a file.')
         else:
@@ -160,8 +162,8 @@ class TaskDescription():
                 if os.access(directory, os.W_OK):
                     return
                 else:
-                    raise PermissionError('Have no permission to '
-                        f'write in directory {repr(directory)}.')
+                    raise PermissionError(f'Have no permission to write in '
+                                          f'directory {repr(directory)}.')
             else:
                 raise NotADirectoryError(
                     f'{repr(directory)} is not a directory.')
@@ -175,8 +177,8 @@ class TaskDescription():
                 if os.access(file, os.R_OK):
                     return
                 else:
-                    raise PermissionError('Have no permission to '
-                        f'read file {repr(file)}.')
+                    raise PermissionError(f'Have no permission to '
+                                          f'read file {repr(file)}.')
             else:
                 raise IsADirectoryError(f'{repr(file)} is not a file.')
         else:
